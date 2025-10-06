@@ -1,3 +1,13 @@
+# SI 201 Project 1
+# Your name: Olivia Lombardo
+# Your student id: 18772895
+# Your email: livlomb@umich.edu
+# Who or what you worked with on this homework (including generative AI like ChatGPT): generative AI (ChatGPT)
+# If you worked with generative AI also add a statement for how you used it.  
+# e.g.: 
+# I used ChatGPT to help me understand the project outline, identify useful helper functions, and define my research questions.
+# I also used it to help me debug some of my functions once I completed the general structure and code.
+
 import csv
 import os
 
@@ -109,7 +119,7 @@ def calculate_average_bill_length(data):
     return results
         
 # ------------------------------------------------------
-# 2. Helper Functions for calculate_body_mass_percentage
+# 4. Helper Functions for calculate_body_mass_percentage
 # ------------------------------------------------------
 
 def compute_species_avg_body_mass(data):
@@ -148,6 +158,7 @@ def compute_species_avg_body_mass(data):
             species_avg[species] = 0.0
 
     return species_avg
+
 
 def filter_by_species_and_sex(data, species, sex):
     """
@@ -201,11 +212,35 @@ def compute_percentage_above_avg(values, avg_mass):
     percentage = (count_above / len(values)) * 100
     return round(percentage, 2)
 
+# ------------------------------------------------------
+# 5. calculate_body_mass_percentage Function
+# ------------------------------------------------------
+def calculate_body_mass_percentage(data):
+    """
+    Calculates, for each species and sex, the % of penguins above their species average body mass.
 
+    Input:
+        data (list of dicts)
+    Output:
+        results (list of dicts):
+            Each dict contains 'Species', 'Sex', '%_above_avg_bodymass'
+    """
+    results = []
 
+    species_avg = compute_species_avg_body_mass(data)
+    
+    for species, avg_mass in species_avg.items():
+        for sex in ['male', 'female']:
+            values = filter_by_species_and_sex(data, species, sex)
+            percent_above = compute_percentage_above_avg(values, avg_mass)
 
+            results.append({
+                    "Species": species,
+                    "Sex": sex,
+                    "%_above_avg_bodymass": percent_above
+                })
 
-
+    return results
 
 # ------------------------------------------------------
 # 2. Main function (controls program flow)
@@ -215,23 +250,19 @@ def main():
     data = read_csv("penguins.csv")
     print(f"Loaded {len(data)} penguin records.")
 
-    # Step 2: Perform calculations
-    # (you’ll later plug in your calculate_average_bill_length()
-    #  and calculate_body_mass_percentage() here)
-    # bill_results = calculate_average_bill_length(data)
-    # mass_results = calculate_body_mass_percentage(data)
-
-    # Step 3: Write results to output file
-    # write_csv("penguins_results.csv", bill_results, mass_results)
-
-    # For now, just check that reading worked
+    # check that reading worked
     print("First record example:")
     print(data[0])
 
 
     bill_results = calculate_average_bill_length(data)
-    print("Average Bill Length Results:")
+    print("\nAverage bill length results:")
     for row in bill_results:
+        print(row)
+
+    mass_results = calculate_body_mass_percentage(data)
+    print("\nPercentage of penguins above their species average body mass results:")
+    for row in mass_results:
         print(row)
 
 # ------------------------------------------------------
