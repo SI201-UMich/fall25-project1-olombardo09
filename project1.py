@@ -36,8 +36,7 @@ def group_by_species_and_island(data):
     Input:
         data (list of dicts): penguin dataset
     Output:
-        groups (dict): keys = (species, island)
-                       values = list of bill lengths (floats)
+        groups (dict): keys = (species, island), values = list of bill lengths (floats)
     """
     groups = {}
 
@@ -109,10 +108,46 @@ def calculate_average_bill_length(data):
                         })
     return results
         
+# ------------------------------------------------------
+# 2. Helper Functions for calculate_body_mass_percentage
+# ------------------------------------------------------
 
+def compute_species_avg_body_mass(data):
+    """
+    Computes the average body mass for each species.
 
+    Input:
+        data (list of dicts)
+    Output:
+        species_avg (dictionary): keys = species, values = average body mass (float)
+    """
+    species_groups = {}
+    for penguin in data:
+        species = penguin['species']
+        mass = penguin['body_mass_g']
 
+        if mass in ("", "NA", "NaN", None):
+            continue  # skip missing data
 
+        try:
+            mass = float(mass)
+        except ValueError:
+            continue  # if conversion fails, skip this record
+
+        if species not in species_groups:
+            species_groups[species] = []
+        species_groups[species].append(mass)
+
+        # Now computing averages per species
+    species_avg = {}
+    for species, masses in species_groups.items():
+        if masses:
+            avg = sum(masses) / len(masses)
+            species_avg[species] = round(avg, 2)
+        else:
+            species_avg[species] = 0.0
+
+    return species_avg
 
 
 
