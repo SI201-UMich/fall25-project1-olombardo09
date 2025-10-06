@@ -149,6 +149,62 @@ def compute_species_avg_body_mass(data):
 
     return species_avg
 
+def filter_by_species_and_sex(data, species, sex):
+    """
+    Filters dataset for penguins of a specific species and sex.
+
+    Input:
+        data (list of dicts), species (string), sex (string)
+
+    Output:
+        values (list of floats (body masses))
+    """
+    values = []
+
+    for penguin in data:
+        if penguin['species'] != species or penguin['sex'] != sex:
+            continue
+
+        mass = penguin['body_mass_g']
+
+        if mass in ("", "NA", "NaN", None):
+            continue
+
+        try:
+            mass = float(mass)
+        except ValueError:
+            continue
+
+        values.append(mass)
+
+    return values
+
+
+def compute_percentage_above_avg(values, avg_mass):
+    """
+    Calculates the percentage of penguins with body mass greater than the species' average.
+
+    Input:
+        values (list of floats)
+        avg_mass (float)
+    Output:
+        percentage (float)
+    """
+    if len(values) == 0:  # checking if the list is empty
+        return 0.0
+
+    count_above = 0
+    for val in values:
+        if val > avg_mass:
+            count_above += 1
+    
+    percentage = (count_above / len(values)) * 100
+    return round(percentage, 2)
+
+
+
+
+
 
 
 # ------------------------------------------------------
