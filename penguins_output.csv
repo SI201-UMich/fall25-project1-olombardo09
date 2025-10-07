@@ -1,0 +1,16 @@
+Average Bill Length Results
+Species,Island,Average_bill_length_mm
+Adelie,Torgersen,38.95
+Adelie,Biscoe,38.98
+Adelie,Dream,38.5
+Gentoo,Biscoe,47.5
+Chinstrap,Dream,48.83
+
+Percentage of Penguins Above Avg Body Mass
+Species,Sex,%_above_avg_bodymass
+Adelie,male,46.58
+Adelie,female,50.68
+Gentoo,female,55.17
+Gentoo,male,54.1
+Chinstrap,female,50.0
+Chinstrap,male,52.94
