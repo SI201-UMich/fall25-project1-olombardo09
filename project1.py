@@ -1,10 +1,9 @@
 # SI 201 Project 1
 # Your name: Olivia Lombardo
-# Your student id: 18772895
+# Your student id: 1877 2895
 # Your email: livlomb@umich.edu
 # Who or what you worked with on this homework (including generative AI like ChatGPT): generative AI (ChatGPT)
-# If you worked with generative AI also add a statement for how you used it.  
-# e.g.: 
+# If you worked with generative AI also add a statement for how you used it: 
 # I used ChatGPT to help me understand the project outline, identify useful helper functions, and define my research questions.
 # I also used it to help me debug some of my functions once I completed the general structure and code.
 
@@ -17,7 +16,7 @@ import os
 def read_csv(filename):
     """
     Reads the dataset into a list of dictionaries,
-    where each dictionary represents one penguin’s data.
+    where each dictionary represents one penguins data.
 
     Input:
         filename (str): the name of the CSV file to read
@@ -34,7 +33,6 @@ def read_csv(filename):
             data.append(row)
 
     return data
-
 
 # ------------------------------------------------------
 # 2. Helper Functions for calculate_average_bill_length
@@ -90,7 +88,6 @@ def compute_average(values):
     # general function to find the average of a list of floats or ints
     # useful for both calculation functions
     return sum(values) / len(values)
-
 
 # ------------------------------------------------------
 # 3. calculate_average_bill_length Function
@@ -243,7 +240,7 @@ def calculate_body_mass_percentage(data):
     return results
 
 # ------------------------------------------------------
-# 2. Main function (controls program flow)
+# 6. Main function (controls program flow)
 # ------------------------------------------------------
 def main():
     # Step 1: Read the penguin dataset
@@ -265,8 +262,6 @@ def main():
     for row in mass_results:
         print(row)
 
-# ------------------------------------------------------
-# 3. Run program
-# ------------------------------------------------------
+
 if __name__ == "__main__":
     main()
