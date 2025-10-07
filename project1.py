@@ -27,10 +27,14 @@ def read_csv(filename):
     dir_path = os.path.dirname(__file__)
     file_path = os.path.join(dir_path, filename)
 
-    with open(file_path, mode='r', newline='') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
-        for row in csv_reader:
-            data.append(row)
+    try:
+        with open(file_path, mode='r', newline='') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                data.append(row)
+    except FileNotFoundError:
+        print(f'Error: File {filename} does not exist')
+        return []
 
     return data
 
@@ -242,8 +246,47 @@ def calculate_body_mass_percentage(data):
 
     return results
 
+
 # ------------------------------------------------------
-# 6. Main function (controls program flow)
+# 6. Write Output CSV File
+# ------------------------------------------------------
+def write_combined_output(filename, bill_results, mass_results):
+    """
+    Writes both bill length and body mass results into one CSV file.
+    """
+    dir_path = os.path.dirname(__file__)
+    file_path = os.path.join(dir_path, filename)
+
+    with open(file_path, mode='w', newline='') as csv_file:
+        writer = csv.writer(csv_file)
+
+        # write bill results first
+        writer.writerow(["Average Bill Length Results"])
+        if bill_results:
+            headers = bill_results[0].keys()
+            writer.writerow(headers)
+            for row in bill_results:
+                writer.writerow(row.values())
+        else:
+            writer.writerow(["No bill results found."])
+
+        writer.writerow([])  # blank line to separate sections
+
+        # write body mass results second
+        writer.writerow(["Percentage of Penguins Above Avg Body Mass"])
+        if mass_results:
+            headers = mass_results[0].keys()
+            writer.writerow(headers)
+            for row in mass_results:
+                writer.writerow(row.values())
+        else:
+            writer.writerow(["No mass results found."])
+
+    print(f"Combined results written to {file_path}")
+
+
+# ------------------------------------------------------
+# 7. Main function (controls program flow)
 # ------------------------------------------------------
 def main():
     # Step 1: Read the penguin dataset
@@ -264,6 +307,8 @@ def main():
     for row in mass_results:
         print(row)
 
+    # Writing output into one CSV file
+    write_combined_output("penguins_output.csv", bill_results, mass_results)
 
 if __name__ == "__main__":
     main()
