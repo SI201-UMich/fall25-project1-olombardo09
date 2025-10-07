@@ -119,42 +119,45 @@ def calculate_average_bill_length(data):
 # 4. Helper Functions for calculate_body_mass_percentage
 # ------------------------------------------------------
 
-def compute_species_avg_body_mass(data):
+def compute_species_sex_avg_body_mass(data):
     """
-    Computes the average body mass for each species.
+    Computes the average body mass for each (species, sex) combo.
+    Skips penguins with missing/invalid sex or body mass values.
 
     Input:
         data (list of dicts)
     Output:
         species_avg (dictionary): keys = species, values = average body mass (float)
     """
-    species_groups = {}
+    species_sex_groups = {}
     for penguin in data:
         species = penguin['species']
+        sex = penguin['sex']
         mass = penguin['body_mass_g']
 
-        if mass in ("", "NA", "NaN", None):
-            continue  # skip missing data
+        if sex in ("", "NA", "NaN", None) or mass in ("", "NA", "NaN", None):
+            continue  # skip missing data for sex and mass variables
 
         try:
             mass = float(mass)
         except ValueError:
             continue  # if conversion fails, skip this record
+        
+        key = (species, sex)
+        if key not in species_sex_groups:
+            species_sex_groups[key] = []
+        species_sex_groups[key].append(mass)
 
-        if species not in species_groups:
-            species_groups[species] = []
-        species_groups[species].append(mass)
-
-        # Now computing averages per species
-    species_avg = {}
-    for species, masses in species_groups.items():
+    # Now computing averages per species
+    species_sex_avg = {}
+    for key, masses in species_sex_groups.items():
         if masses:
             avg = sum(masses) / len(masses)
-            species_avg[species] = round(avg, 2)
+            species_sex_avg[key] = round(avg, 2)
         else:
-            species_avg[species] = 0.0
+            species_sex_avg[key] = 0.0
 
-    return species_avg
+    return species_sex_avg
 
 
 def filter_by_species_and_sex(data, species, sex):
@@ -224,18 +227,18 @@ def calculate_body_mass_percentage(data):
     """
     results = []
 
-    species_avg = compute_species_avg_body_mass(data)
+    # Uses helper function to extract the body mass average per species & sex
+    species_sex_avg = compute_species_sex_avg_body_mass(data)
     
-    for species, avg_mass in species_avg.items():
-        for sex in ['male', 'female']:
-            values = filter_by_species_and_sex(data, species, sex)
-            percent_above = compute_percentage_above_avg(values, avg_mass)
+    for (species, sex), avg_mass in species_sex_avg.items():
+        values = filter_by_species_and_sex(data, species, sex)
+        percent_above = compute_percentage_above_avg(values, avg_mass)
 
-            results.append({
-                    "Species": species,
-                    "Sex": sex,
-                    "%_above_avg_bodymass": percent_above
-                })
+        results.append({
+                "Species": species,
+                "Sex": sex,
+                "%_above_avg_bodymass": percent_above
+            })
 
     return results
 
@@ -248,9 +251,8 @@ def main():
     print(f"Loaded {len(data)} penguin records.")
 
     # check that reading worked
-    print("First record example:")
-    print(data[0])
-
+    print("First 5 rows example:")
+    print(data[:5])
 
     bill_results = calculate_average_bill_length(data)
     print("\nAverage bill length results:")
