@@ -297,27 +297,25 @@ class TestPenguinFunctions(unittest.TestCase):
     """
     # ------------------ group_by_species_and_island ------------------
     def test_group_by_species_and_island(self):
-        # general cases
-        # multiple peguins from the same species/island pairing
-        sample_data1 = [{'': '1', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1', 'bill_depth_mm': '18.7', 'flipper_length_mm': '181', 'body_mass_g': '3750', 'sex': 'male', 'year': '2007'},
-                        {'': '2', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5', 'bill_depth_mm': '17.4', 'flipper_length_mm': '186', 'body_mass_g': '3800', 'sex': 'female', 'year': '2007'}]
+        # general case- multiple peguins from the same species/island pairing
+        sample_data1 = [{'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1'},
+                        {'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5'}]
         expected_output1 = {('Adelie', 'Torgersen'): [39.1, 39.5]}
         self.assertEqual(group_by_species_and_island(sample_data1), expected_output1)
 
-        # different species/island groups
-        sample_data2 = [{'': '153', 'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '46.1', 'bill_depth_mm': '13.2', 'flipper_length_mm': '211', 'body_mass_g': '4500', 'sex': 'female', 'year': '2007'},
-                        {'': '2', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5', 'bill_depth_mm': '17.4', 'flipper_length_mm': '186', 'body_mass_g': '3800', 'sex': 'female', 'year': '2007'}]
+        # general case- different species/island groups
+        sample_data2 = [{'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '46.1'},
+                        {'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5'}]
         expected_output2 = {('Gentoo', 'Biscoe'): [46.1],
                             ('Adelie', 'Torgersen'): [39.5]}
         self.assertEqual(group_by_species_and_island(sample_data2), expected_output2)
-        # edge cases
-        # invalid bill lengths
+        # edge case- invalid bill lengths
         sample_data3 = [{"species": "Adelie", "island": "Dream", "bill_length_mm": "NA"},
                         {"species": "Gentoo", "island": "Biscoe", "bill_length_mm": ""}]
         expected_output3 = {}
         self.assertEqual(group_by_species_and_island(sample_data3), expected_output3)
 
-        # empty dataset
+        # edge case- empty dataset
         sample_data4 = []
         expected_output4 = {}
         self.assertEqual(group_by_species_and_island(sample_data4), expected_output4)
@@ -333,16 +331,31 @@ class TestPenguinFunctions(unittest.TestCase):
 
     # ------------------ calculate_average_bill_length ------------------
     def test_calculate_average_bill_length(self):
-        # general cases
-        # edge cases
-    
+        # general case- single group
+        sample_data1 = [{"species": "Adelie", "island": "Torgersen", "bill_length_mm": "39.1"},
+            {"species": "Adelie", "island": "Torgersen", "bill_length_mm": "40.5"}]
+        expected_output1 = [{"Species": "Adelie", "Island": "Torgersen", "Average_bill_length_mm": 39.8}]
+        self.assertEqual(calculate_average_bill_length(sample_data1), expected_output1)
 
+        # general case- multiple groups
+        sample_data2 = [{"species": "Adelie", "island": "Dream", "bill_length_mm": "38.9"},
+            {"species": "Gentoo", "island": "Biscoe", "bill_length_mm": "46.1"}]
+        expected_output2 = [{"Species": "Adelie", "Island": "Dream", "Average_bill_length_mm": 38.9},
+            {"Species": "Gentoo", "Island": "Biscoe", "Average_bill_length_mm": 46.1}]
+        # Sort results before comparison in case dictionary order differs
+        self.assertEqual(calculate_average_bill_length(sample_data2), expected_output2)
 
+        # edge case- invalid bill lengths
+        sample_data3 = [{"species": "Adelie", "island": "Dream", "bill_length_mm": "NA"},
+            {"species": "Gentoo", "island": "Biscoe", "bill_length_mm": ""}]
+        expected_output3 = []
+        self.assertEqual(calculate_average_bill_length(sample_data3), expected_output3)
 
-
-
-
-
+        # edge case- empty dataset
+        sample_data4 = []
+        expected_output4 = []
+        self.assertEqual(calculate_average_bill_length(sample_data4), expected_output4)
+        
 
 # ------------------------------------------------------
 # 8. Main function (controls program flow)
