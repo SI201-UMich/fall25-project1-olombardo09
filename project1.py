@@ -9,6 +9,7 @@
 
 import csv
 import os
+import unittest
 
 # ------------------------------------------------------
 # 1. Read CSV
@@ -284,9 +285,67 @@ def write_combined_output(filename, bill_results, mass_results):
 
     print(f"Combined results written to {file_path}")
 
+# ------------------------------------------------------
+# 7. Test Cases
+# ------------------------------------------------------
+class TestPenguinFunctions(unittest.TestCase):
+    """
+    Unit tests for all helper and calculation functions.
+    Each function has 4 test cases:
+      - 2 general cases
+      - 2 edge cases
+    """
+    # ------------------ group_by_species_and_island ------------------
+    def test_group_by_species_and_island(self):
+        # general cases
+        # multiple peguins from the same species/island pairing
+        sample_data1 = [{'': '1', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1', 'bill_depth_mm': '18.7', 'flipper_length_mm': '181', 'body_mass_g': '3750', 'sex': 'male', 'year': '2007'},
+                        {'': '2', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5', 'bill_depth_mm': '17.4', 'flipper_length_mm': '186', 'body_mass_g': '3800', 'sex': 'female', 'year': '2007'}]
+        expected_output1 = {('Adelie', 'Torgersen'): [39.1, 39.5]}
+        self.assertEqual(group_by_species_and_island(sample_data1), expected_output1)
+
+        # different species/island groups
+        sample_data2 = [{'': '153', 'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '46.1', 'bill_depth_mm': '13.2', 'flipper_length_mm': '211', 'body_mass_g': '4500', 'sex': 'female', 'year': '2007'},
+                        {'': '2', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5', 'bill_depth_mm': '17.4', 'flipper_length_mm': '186', 'body_mass_g': '3800', 'sex': 'female', 'year': '2007'}]
+        expected_output2 = {('Gentoo', 'Biscoe'): [46.1],
+                            ('Adelie', 'Torgersen'): [39.5]}
+        self.assertEqual(group_by_species_and_island(sample_data2), expected_output2)
+        # edge cases
+        # invalid bill lengths
+        sample_data3 = [{"species": "Adelie", "island": "Dream", "bill_length_mm": "NA"},
+                        {"species": "Gentoo", "island": "Biscoe", "bill_length_mm": ""}]
+        expected_output3 = {}
+        self.assertEqual(group_by_species_and_island(sample_data3), expected_output3)
+
+        # empty dataset
+        sample_data4 = []
+        expected_output4 = {}
+        self.assertEqual(group_by_species_and_island(sample_data4), expected_output4)
+
+    # ------------------ compute_average ------------------
+    def test_compute_average(self):
+        # general cases
+        self.assertEqual(compute_average([1,2,3,4,5]), 3.0)
+        self.assertEqual(compute_average([10,20,30,40]), 25.0)
+        # edge cases
+        self.assertEqual(compute_average([0,0,0]), 0.0)
+        self.assertEqual(compute_average([]), 0.0)
+
+    # ------------------ calculate_average_bill_length ------------------
+    def test_calculate_average_bill_length(self):
+        # general cases
+        # edge cases
+    
+
+
+
+
+
+
+
 
 # ------------------------------------------------------
-# 7. Main function (controls program flow)
+# 8. Main function (controls program flow)
 # ------------------------------------------------------
 def main():
     # Step 1: Read the penguin dataset
@@ -312,3 +371,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+if __name__ == '__main__':
+    unittest.main()
