@@ -358,18 +358,44 @@ class TestPenguinFunctions(unittest.TestCase):
 
     # ------------------ calculate_average_bill_length ------------------
     def test_calculate_body_mass_percentage(self):
-        # general case
+        # general case- one species, male & females
+        sample_data1 = [{"species": "Adelie", "sex": "male", "body_mass_g": "4000"},
+                        {"species": "Adelie", "sex": "female", "body_mass_g": "3600"},
+                        {"species": "Adelie", "sex": "male", "body_mass_g": "4200"},
+                        {"species": "Adelie", "sex": "female", "body_mass_g": "3400"}]
+        # male avg: (4000 + 4200) / 2 = 4100
+        # female avg: (3600 + 3400) / 2 = 3500
+        # males above 4100: 1 of 2 (50%)
+        # females above 3500: 1 of 2 (50%)
+        expected_output1 = [
+        {"Species": "Adelie", "Sex": "male", "%_above_avg_bodymass": 50.0},
+        {"Species": "Adelie", "Sex": "female", "%_above_avg_bodymass": 50.0}]
 
+        self.assertEqual(calculate_body_mass_percentage(sample_data1), expected_output1)
 
-
-        # general case
+        # general case- 2 species with both male & females
+        sample_data2 = [{"species": "Adelie", "sex": "male", "body_mass_g": "4000"},
+        {"species": "Adelie", "sex": "male", "body_mass_g": "4200"},
+        {"species": "Adelie", "sex": "male", "body_mass_g": "4500"},
+        {"species": "Gentoo", "sex": "female", "body_mass_g": "4800"},
+        {"species": "Gentoo", "sex": "male", "body_mass_g": "5000"},
+        {"species": "Gentoo", "sex": "male", "body_mass_g": "5200"},
+        {"species": "Gentoo", "sex": "female", "body_mass_g": "4000"}]
+        # Adelie, male avg: (4000 + 4200 + 4500) / 3 = 4233.33 --> 1 of 3 (33.33%)
+        # Gentoo, female avg: (4800 + 4000) / 2 = 4400 --> 1 of 2 (50%)
+        # Gentoo, male avg: (5000 + 5200) / 2 = 5100 --> 1 of 2 (50%)
+        expected_ouput2= [
+            {'Species': 'Adelie', 'Sex': 'male', '%_above_avg_bodymass': 33.33},
+            {'Species': 'Gentoo', 'Sex': 'female', '%_above_avg_bodymass': 50.0},
+            {'Species': 'Gentoo', 'Sex': 'male', '%_above_avg_bodymass': 50.0}]
+        self.assertEqual(calculate_body_mass_percentage(sample_data2),expected_ouput2)
 
         # edge case- invalid inputs
         sample_data3 = [{"species": "Adelie", "sex": "male", "body_mass_g": ""},
                         {"species": "Adelie", "sex": "female", "body_mass_g": "NA"}]
         expected_output3 = []
         self.assertEqual(calculate_body_mass_percentage(sample_data3), expected_output3)
-        
+
         # edge case- empty dataset
         sample_data4 = []
         expected_output4 = []
