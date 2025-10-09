@@ -355,7 +355,25 @@ class TestPenguinFunctions(unittest.TestCase):
         sample_data4 = []
         expected_output4 = []
         self.assertEqual(calculate_average_bill_length(sample_data4), expected_output4)
+
+    # ------------------ calculate_average_bill_length ------------------
+    def test_calculate_body_mass_percentage(self):
+        # general case
+
+
+
+        # general case
+
+        # edge case- invalid inputs
+        sample_data3 = [{"species": "Adelie", "sex": "male", "body_mass_g": ""},
+                        {"species": "Adelie", "sex": "female", "body_mass_g": "NA"}]
+        expected_output3 = []
+        self.assertEqual(calculate_body_mass_percentage(sample_data3), expected_output3)
         
+        # edge case- empty dataset
+        sample_data4 = []
+        expected_output4 = []
+        self.assertEqual(calculate_body_mass_percentage(sample_data4), expected_output4)
 
 # ------------------------------------------------------
 # 8. Main function (controls program flow)
@@ -384,6 +402,4 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-if __name__ == '__main__':
     unittest.main()
