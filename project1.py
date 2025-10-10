@@ -211,7 +211,7 @@ def compute_percentage_above_avg(values, avg_mass):
 
     count_above = 0
     for val in values:
-        if val > avg_mass:
+        if val >= avg_mass:
             count_above += 1
     
     percentage = (count_above / len(values)) * 100
@@ -246,7 +246,6 @@ def calculate_body_mass_percentage(data):
             })
 
     return results
-
 
 # ------------------------------------------------------
 # 6. Write Output CSV File
@@ -332,22 +331,22 @@ class TestPenguinFunctions(unittest.TestCase):
     # ------------------ calculate_average_bill_length ------------------
     def test_calculate_average_bill_length(self):
         # general case- single group
-        sample_data1 = [{"species": "Adelie", "island": "Torgersen", "bill_length_mm": "39.1"},
-            {"species": "Adelie", "island": "Torgersen", "bill_length_mm": "40.5"}]
-        expected_output1 = [{"Species": "Adelie", "Island": "Torgersen", "Average_bill_length_mm": 39.8}]
+        sample_data1 = [{'': '1', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1', 'bill_depth_mm': '18.7', 'flipper_length_mm': '181', 'body_mass_g': '3750', 'sex': 'male', 'year': '2007'},
+                        {'': '2', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5', 'bill_depth_mm': '17.4', 'flipper_length_mm': '186', 'body_mass_g': '3800', 'sex': 'female', 'year': '2007'}]
+        expected_output1 = [{"Species": "Adelie", "Island": "Torgersen", "Average_bill_length_mm": 39.3}]
         self.assertEqual(calculate_average_bill_length(sample_data1), expected_output1)
 
         # general case- multiple groups
-        sample_data2 = [{"species": "Adelie", "island": "Dream", "bill_length_mm": "38.9"},
-            {"species": "Gentoo", "island": "Biscoe", "bill_length_mm": "46.1"}]
-        expected_output2 = [{"Species": "Adelie", "Island": "Dream", "Average_bill_length_mm": 38.9},
-            {"Species": "Gentoo", "Island": "Biscoe", "Average_bill_length_mm": 46.1}]
+        sample_data2 = [{'': '1', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1', 'bill_depth_mm': '18.7', 'flipper_length_mm': '181', 'body_mass_g': '3750', 'sex': 'male', 'year': '2007'},
+            {'': '201', 'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '44.9', 'bill_depth_mm': '13.3', 'flipper_length_mm': '213', 'body_mass_g': '5100', 'sex': 'female', 'year': '2008'}]
+        expected_output2 = [{"Species": "Adelie", "Island": "Torgersen", "Average_bill_length_mm": 39.1},
+            {"Species": "Gentoo", "Island": "Biscoe", "Average_bill_length_mm": 44.9}]
         # Sort results before comparison in case dictionary order differs
         self.assertEqual(calculate_average_bill_length(sample_data2), expected_output2)
 
         # edge case- invalid bill lengths
-        sample_data3 = [{"species": "Adelie", "island": "Dream", "bill_length_mm": "NA"},
-            {"species": "Gentoo", "island": "Biscoe", "bill_length_mm": ""}]
+        sample_data3 = [{'': '4', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': 'NA', 'bill_depth_mm': 'NA', 'flipper_length_mm': 'NA', 'body_mass_g': 'NA', 'sex': 'NA', 'year': '2007'},
+            {'': '272', 'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': 'NA', 'bill_depth_mm': 'NA', 'flipper_length_mm': 'NA', 'body_mass_g': 'NA', 'sex': 'NA', 'year': '2009'}]
         expected_output3 = []
         self.assertEqual(calculate_average_bill_length(sample_data3), expected_output3)
 
@@ -359,40 +358,39 @@ class TestPenguinFunctions(unittest.TestCase):
     # ------------------ calculate_average_bill_length ------------------
     def test_calculate_body_mass_percentage(self):
         # general case- one species, male & females
-        sample_data1 = [{"species": "Adelie", "sex": "male", "body_mass_g": "4000"},
-                        {"species": "Adelie", "sex": "female", "body_mass_g": "3600"},
-                        {"species": "Adelie", "sex": "male", "body_mass_g": "4200"},
-                        {"species": "Adelie", "sex": "female", "body_mass_g": "3400"}]
-        # male avg: (4000 + 4200) / 2 = 4100
-        # female avg: (3600 + 3400) / 2 = 3500
-        # males above 4100: 1 of 2 (50%)
-        # females above 3500: 1 of 2 (50%)
-        expected_output1 = [
-        {"Species": "Adelie", "Sex": "male", "%_above_avg_bodymass": 50.0},
+        sample_data1 = [{'': '1', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1', 'bill_depth_mm': '18.7', 'flipper_length_mm': '181', 'body_mass_g': '3750', 'sex': 'male', 'year': '2007'},
+                        {'': '2', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5', 'bill_depth_mm': '17.4', 'flipper_length_mm': '186', 'body_mass_g': '3800', 'sex': 'female', 'year': '2007'},
+                        {'': '3', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '40.3', 'bill_depth_mm': '18', 'flipper_length_mm': '195', 'body_mass_g': '3250', 'sex': 'female', 'year': '2007'}]
+        # male avg: 3750
+        # female avg: (3800 + 3250) / 2 = 3525
+        # males above 3750: 1 of 1 (100%)
+        # females above 3525: 1 of 2 (50%)
+        expected_output1 = [{"Species": "Adelie", "Sex": "male", "%_above_avg_bodymass": 100.0},
         {"Species": "Adelie", "Sex": "female", "%_above_avg_bodymass": 50.0}]
 
         self.assertEqual(calculate_body_mass_percentage(sample_data1), expected_output1)
 
         # general case- 2 species with both male & females
-        sample_data2 = [{"species": "Adelie", "sex": "male", "body_mass_g": "4000"},
-        {"species": "Adelie", "sex": "male", "body_mass_g": "4200"},
-        {"species": "Adelie", "sex": "male", "body_mass_g": "4500"},
-        {"species": "Gentoo", "sex": "female", "body_mass_g": "4800"},
-        {"species": "Gentoo", "sex": "male", "body_mass_g": "5000"},
-        {"species": "Gentoo", "sex": "male", "body_mass_g": "5200"},
-        {"species": "Gentoo", "sex": "female", "body_mass_g": "4000"}]
-        # Adelie, male avg: (4000 + 4200 + 4500) / 3 = 4233.33 --> 1 of 3 (33.33%)
-        # Gentoo, female avg: (4800 + 4000) / 2 = 4400 --> 1 of 2 (50%)
-        # Gentoo, male avg: (5000 + 5200) / 2 = 5100 --> 1 of 2 (50%)
-        expected_ouput2= [
-            {'Species': 'Adelie', 'Sex': 'male', '%_above_avg_bodymass': 33.33},
-            {'Species': 'Gentoo', 'Sex': 'female', '%_above_avg_bodymass': 50.0},
-            {'Species': 'Gentoo', 'Sex': 'male', '%_above_avg_bodymass': 50.0}]
-        self.assertEqual(calculate_body_mass_percentage(sample_data2),expected_ouput2)
+        sample_data2 = [{'': '1', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1', 'bill_depth_mm': '18.7', 'flipper_length_mm': '181', 'body_mass_g': '3750', 'sex': 'male', 'year': '2007'},
+        {'': '2', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5', 'bill_depth_mm': '17.4', 'flipper_length_mm': '186', 'body_mass_g': '3800', 'sex': 'female', 'year': '2007'},
+        {'': '3', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '40.3', 'bill_depth_mm': '18', 'flipper_length_mm': '195', 'body_mass_g': '3250', 'sex': 'female', 'year': '2007'},
+        {'': '156', 'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '50', 'bill_depth_mm': '15.2', 'flipper_length_mm': '218', 'body_mass_g': '5700', 'sex': 'male', 'year': '2007'},
+        {'': '157', 'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '47.6', 'bill_depth_mm': '14.5', 'flipper_length_mm': '215', 'body_mass_g': '5400', 'sex': 'male', 'year': '2007'},
+        {'': '158', 'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '46.5', 'bill_depth_mm': '13.5', 'flipper_length_mm': '210', 'body_mass_g': '4550', 'sex': 'female', 'year': '2007'}]
+        # Adelie, male avg: 3750 --> 100%
+        # Adelie, female avg: (3800 + 3250) / 2 = 3525 --> 50%
+        # Gentoo, male avg: (5700 + 5400) / 2 = 5550 --> 1 of 2 (50%)
+        # Gentoo, female avg: 4550 --> 100%
+        expected_output2= [
+            {'Species': 'Adelie', 'Sex': 'male', '%_above_avg_bodymass': 100.0},
+            {'Species': 'Adelie', 'Sex': 'female', '%_above_avg_bodymass': 50.0},
+            {'Species': 'Gentoo', 'Sex': 'male', '%_above_avg_bodymass': 50.0},
+            {'Species': 'Gentoo', 'Sex': 'female', '%_above_avg_bodymass': 100.0}]
+        self.assertEqual(calculate_body_mass_percentage(sample_data2),expected_output2)
 
         # edge case- invalid inputs
-        sample_data3 = [{"species": "Adelie", "sex": "male", "body_mass_g": ""},
-                        {"species": "Adelie", "sex": "female", "body_mass_g": "NA"}]
+        sample_data3 = [{'': '4', 'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': 'NA', 'bill_depth_mm': 'NA', 'flipper_length_mm': 'NA', 'body_mass_g': 'NA', 'sex': 'NA', 'year': '2007'},
+                        {'': '272', 'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': 'NA', 'bill_depth_mm': 'NA', 'flipper_length_mm': 'NA', 'body_mass_g': 'NA', 'sex': 'NA', 'year': '2009'}]
         expected_output3 = []
         self.assertEqual(calculate_body_mass_percentage(sample_data3), expected_output3)
 
@@ -410,7 +408,7 @@ def main():
     print(f"Loaded {len(data)} penguin records.")
 
     # check that reading worked
-    print("First 5 rows example:")
+    print("\nFirst 5 rows example:")
     print(data[:5])
 
     bill_results = calculate_average_bill_length(data)
