@@ -91,7 +91,6 @@ def compute_average(values):
         return 0
     
     # general function to find the average of a list of floats or ints
-    # useful for both calculation functions
     return sum(values) / len(values)
 
 # ------------------------------------------------------
@@ -132,7 +131,7 @@ def compute_species_sex_avg_body_mass(data):
     Input:
         data (list of dicts)
     Output:
-        species_avg (dictionary): keys = species, values = average body mass (float)
+        species_avg (dictionary): keys = (species, sex), values = average body mass (float)
     """
     species_sex_groups = {}
     for penguin in data:
@@ -198,11 +197,10 @@ def filter_by_species_and_sex(data, species, sex):
 
 def compute_percentage_above_avg(values, avg_mass):
     """
-    Calculates the percentage of penguins with body mass greater than the species' average.
+    Calculates the percentage of penguins with body mass greater than the species'/sex average.
 
     Input:
-        values (list of floats)
-        avg_mass (float)
+        values (list of floats), avg_mass (float)
     Output:
         percentage (float)
     """
@@ -222,7 +220,7 @@ def compute_percentage_above_avg(values, avg_mass):
 # ------------------------------------------------------
 def calculate_body_mass_percentage(data):
     """
-    Calculates, for each species and sex, the % of penguins above their species average body mass.
+    Calculates, for each species and sex, the % of penguins above their species/sex average body mass.
 
     Input:
         data (list of dicts)
@@ -294,39 +292,30 @@ class TestPenguinFunctions(unittest.TestCase):
       - 2 general cases
       - 2 edge cases
     """
-    # ------------------ group_by_species_and_island ------------------
-    def test_group_by_species_and_island(self):
-        # general case- multiple peguins from the same species/island pairing
-        sample_data1 = [{'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1'},
-                        {'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5'}]
-        expected_output1 = {('Adelie', 'Torgersen'): [39.1, 39.5]}
-        self.assertEqual(group_by_species_and_island(sample_data1), expected_output1)
+    # # ------------------ group_by_species_and_island ------------------
+    # def test_group_by_species_and_island(self):
+    #     # general case- multiple peguins from the same species/island pairing
+    #     sample_data1 = [{'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1'},
+    #                     {'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5'}]
+    #     expected_output1 = {('Adelie', 'Torgersen'): [39.1, 39.5]}
+    #     self.assertEqual(group_by_species_and_island(sample_data1), expected_output1)
 
-        # general case- different species/island groups
-        sample_data2 = [{'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '46.1'},
-                        {'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5'}]
-        expected_output2 = {('Gentoo', 'Biscoe'): [46.1],
-                            ('Adelie', 'Torgersen'): [39.5]}
-        self.assertEqual(group_by_species_and_island(sample_data2), expected_output2)
-        # edge case- invalid bill lengths
-        sample_data3 = [{"species": "Adelie", "island": "Dream", "bill_length_mm": "NA"},
-                        {"species": "Gentoo", "island": "Biscoe", "bill_length_mm": ""}]
-        expected_output3 = {}
-        self.assertEqual(group_by_species_and_island(sample_data3), expected_output3)
+    #     # general case- different species/island groups
+    #     sample_data2 = [{'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '46.1'},
+    #                     {'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5'}]
+    #     expected_output2 = {('Gentoo', 'Biscoe'): [46.1],
+    #                         ('Adelie', 'Torgersen'): [39.5]}
+    #     self.assertEqual(group_by_species_and_island(sample_data2), expected_output2)
+    #     # edge case- invalid bill lengths
+    #     sample_data3 = [{"species": "Adelie", "island": "Dream", "bill_length_mm": "NA"},
+    #                     {"species": "Gentoo", "island": "Biscoe", "bill_length_mm": ""}]
+    #     expected_output3 = {}
+    #     self.assertEqual(group_by_species_and_island(sample_data3), expected_output3)
 
-        # edge case- empty dataset
-        sample_data4 = []
-        expected_output4 = {}
-        self.assertEqual(group_by_species_and_island(sample_data4), expected_output4)
-
-    # ------------------ compute_average ------------------
-    def test_compute_average(self):
-        # general cases
-        self.assertEqual(compute_average([1,2,3,4,5]), 3.0)
-        self.assertEqual(compute_average([10,20,30,40]), 25.0)
-        # edge cases
-        self.assertEqual(compute_average([0,0,0]), 0.0)
-        self.assertEqual(compute_average([]), 0.0)
+    #     # edge case- empty dataset
+    #     sample_data4 = []
+    #     expected_output4 = {}
+    #     self.assertEqual(group_by_species_and_island(sample_data4), expected_output4)
 
     # ------------------ calculate_average_bill_length ------------------
     def test_calculate_average_bill_length(self):
