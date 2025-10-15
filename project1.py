@@ -292,31 +292,6 @@ class TestPenguinFunctions(unittest.TestCase):
       - 2 general cases
       - 2 edge cases
     """
-    # # ------------------ group_by_species_and_island ------------------
-    # def test_group_by_species_and_island(self):
-    #     # general case- multiple peguins from the same species/island pairing
-    #     sample_data1 = [{'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.1'},
-    #                     {'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5'}]
-    #     expected_output1 = {('Adelie', 'Torgersen'): [39.1, 39.5]}
-    #     self.assertEqual(group_by_species_and_island(sample_data1), expected_output1)
-
-    #     # general case- different species/island groups
-    #     sample_data2 = [{'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '46.1'},
-    #                     {'species': 'Adelie', 'island': 'Torgersen', 'bill_length_mm': '39.5'}]
-    #     expected_output2 = {('Gentoo', 'Biscoe'): [46.1],
-    #                         ('Adelie', 'Torgersen'): [39.5]}
-    #     self.assertEqual(group_by_species_and_island(sample_data2), expected_output2)
-    #     # edge case- invalid bill lengths
-    #     sample_data3 = [{"species": "Adelie", "island": "Dream", "bill_length_mm": "NA"},
-    #                     {"species": "Gentoo", "island": "Biscoe", "bill_length_mm": ""}]
-    #     expected_output3 = {}
-    #     self.assertEqual(group_by_species_and_island(sample_data3), expected_output3)
-
-    #     # edge case- empty dataset
-    #     sample_data4 = []
-    #     expected_output4 = {}
-    #     self.assertEqual(group_by_species_and_island(sample_data4), expected_output4)
-
     # ------------------ calculate_average_bill_length ------------------
     def test_calculate_average_bill_length(self):
         # general case- single group
@@ -330,7 +305,6 @@ class TestPenguinFunctions(unittest.TestCase):
             {'': '201', 'species': 'Gentoo', 'island': 'Biscoe', 'bill_length_mm': '44.9', 'bill_depth_mm': '13.3', 'flipper_length_mm': '213', 'body_mass_g': '5100', 'sex': 'female', 'year': '2008'}]
         expected_output2 = [{"Species": "Adelie", "Island": "Torgersen", "Average_bill_length_mm": 39.1},
             {"Species": "Gentoo", "Island": "Biscoe", "Average_bill_length_mm": 44.9}]
-        # Sort results before comparison in case dictionary order differs
         self.assertEqual(calculate_average_bill_length(sample_data2), expected_output2)
 
         # edge case- invalid bill lengths
@@ -356,7 +330,6 @@ class TestPenguinFunctions(unittest.TestCase):
         # females above 3525: 1 of 2 (50%)
         expected_output1 = [{"Species": "Adelie", "Sex": "male", "%_above_avg_bodymass": 100.0},
         {"Species": "Adelie", "Sex": "female", "%_above_avg_bodymass": 50.0}]
-
         self.assertEqual(calculate_body_mass_percentage(sample_data1), expected_output1)
 
         # general case- 2 species with both male & females
